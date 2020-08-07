@@ -14,9 +14,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import click
 from unittest import mock
 
+import click
 import fixtures
 from testtools.matchers import Equals
 
@@ -313,7 +313,8 @@ class TestSudo(unit.TestCase):
             fixtures.MockPatch("os.geteuid", return_value=0)
         ).mock
 
-    def test_click_error_with_sudo_for_providers(self):
+    @mock.patch("sys.stdin.isatty", return_value=True)
+    def test_click_error_with_sudo_for_providers(self, mock_isatty):
         for provider in ["lxd", "multipass"]:
             self.useFixture(
                 fixtures.EnvironmentVariable("SNAPCRAFT_BUILD_ENVIRONMENT", provider)

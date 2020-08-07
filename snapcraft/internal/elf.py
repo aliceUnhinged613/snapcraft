@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 
 
 def _ldd_resolve(soname: str, soname_path: str) -> Tuple[str, str]:
-    logger.debug(f"_ldd_resolve: {soname!r} {soname_path!r}")
+    # logger.debug(f"_ldd_resolve: {soname!r} {soname_path!r}")
 
     # If found, resolve the path components.  We can safely determine that
     # ldd found the match if it returns an absolute path.  For additional
@@ -63,7 +63,7 @@ def ldd(path: str, ld_library_paths: List[str]) -> Dict[str, str]:
 
     env = os.environ.copy()
     env["LD_LIBRARY_PATH"] = ":".join(ld_library_paths)
-    logger.debug(f"invoking ldd with ld library paths: {ld_library_paths!r}")
+    # logger.debug(f"invoking ldd with ld library paths: {ld_library_paths!r}")
 
     try:
         # ldd output sample:
@@ -75,7 +75,7 @@ def ldd(path: str, ld_library_paths: List[str]) -> Dict[str, str]:
         ldd_lines = (
             subprocess.check_output(["ldd", path], env=env).decode().splitlines()
         )
-        logger.debug(f"ldd output:\n{ldd_lines}")
+        # logger.debug(f"ldd output:\n{ldd_lines}")
     except subprocess.CalledProcessError:
         logger.warning("Unable to determine library dependencies for {!r}".format(path))
         return libraries
@@ -98,7 +98,7 @@ def ldd(path: str, ld_library_paths: List[str]) -> Dict[str, str]:
         soname, soname_path = _ldd_resolve(match.group(1), match.group(2))
         libraries[soname] = soname_path
 
-    logger.debug(f"ldd results: {libraries!r}")
+    # logger.debug(f"ldd results: {libraries!r}")
     return libraries
 
 
@@ -198,14 +198,14 @@ class Library:
         else:
             self.in_base_snap = False
 
-        logger.debug(
-            "{soname} with original path {original_path} found on {path} in base: {in_base}".format(
-                soname=soname,
-                original_path=soname_path,
-                path=self.path,
-                in_base=self.in_base_snap,
-            )
-        )
+        # logger.debug(
+        #    "{soname} with original path {original_path} found on {path} in base: {in_base}".format(
+        #        soname=soname,
+        #        original_path=soname_path,
+        #        path=self.path,
+        #        in_base=self.in_base_snap,
+        #    )
+        # )
 
     def _update_soname_cache(self, resolved_path: str) -> None:
         self.soname_cache[self.arch, self.soname] = resolved_path
